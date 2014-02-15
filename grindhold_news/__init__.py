@@ -124,7 +124,7 @@ class Module(AbstractModule):
         for row in cur.fetchallmap():
             ret[row["NWS_ID"]] = {"author":row["USR_NAME"],
                                   "title":row["NWS_TITLE"],
-                                  "date":str(row["NWS_DATE"]),
+                                  "date":str(row["NWS_DATE"]).split(".")[0],
                                   "show":bool(row["NWS_SHOW"])}
         return ret 
 
@@ -148,7 +148,7 @@ class Module(AbstractModule):
             cur = db.query(self,stmnt_comment, (int(entry_id), int(widget_id)))
             for commentrow in cur.fetchallmap():
                 ret["comments"][commentrow["COM_ID"]] = {
-                        "date": str(commentrow["COM_DATE"]),
+                        "date": str(commentrow["COM_DATE"]).split(".")[0],
                         "author":commentrow["COM_AUTHOR"],
                         "content":commentrow["COM_TEXT"],
                     }
