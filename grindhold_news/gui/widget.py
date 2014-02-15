@@ -80,15 +80,14 @@ class WidgetPage(gtk.VBox):
         def search_comments(model,path,rowiter):
             comments = self._current_entry["comments"]
             nr = model.get_value(rowiter,4)
-            if str(nr) not in self._news.keys():
+            if str(nr) not in comments.keys():
                 self._itersToRemove.append(rowiter)
             else:
                 model.set_value(rowiter,0,comments[str(nr)]["del"])
                 model.set_value(rowiter,1,comments[str(nr)]["date"])
                 model.set_value(rowiter,2,comments[str(nr)]["author"])
                 model.set_value(rowiter,3,comments[str(nr)]["content"])
-            self._news_handled.append(nr)
-        
+            self._comments_handled.append(nr)
 
         self._news_handled = []
         self._itersToRemove = []
