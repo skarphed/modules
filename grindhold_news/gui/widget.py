@@ -49,9 +49,12 @@ class WidgetPage(gtk.VBox):
         self.builder = gtk.Builder()
         self.builder.add_from_file(self._path+"widget.glade")
         self.handlers = {
-            "save_cb"       : self.saveCallback,
-            "new_cb"        : self.newCallback,
-            "choose_news_cb": self.chooseNewsCallback
+            "save_cb"           : self.saveCallback,
+            "new_cb"            : self.newCallback,
+            "choose_news_cb"    : self.chooseNewsCallback,
+            "delete_cb"         : self.deleteCallback,
+            "toggle_nws_del_cb" : self.toggleDeleteNewsCallback,
+            "toggle_com_del_cb" : self.toggleDeleteCommentCallback
         }
         self.builder.connect_signals(self.handlers)
 
@@ -71,7 +74,6 @@ class WidgetPage(gtk.VBox):
             if str(nr) not in self._news.keys():
                 self._itersToRemove.append(rowiter)
             else:
-                model.set_value(rowiter,0,self._news[str(nr)]["show"])
                 model.set_value(rowiter,1,self._news[str(nr)]["title"])
                 model.set_value(rowiter,2,self._news[str(nr)]["author"])
                 model.set_value(rowiter,3,self._news[str(nr)]["date"])
@@ -83,7 +85,6 @@ class WidgetPage(gtk.VBox):
             if str(nr) not in comments.keys():
                 self._itersToRemove.append(rowiter)
             else:
-                model.set_value(rowiter,0,comments[str(nr)]["del"])
                 model.set_value(rowiter,1,comments[str(nr)]["date"])
                 model.set_value(rowiter,2,comments[str(nr)]["author"])
                 model.set_value(rowiter,3,comments[str(nr)]["content"])
@@ -98,7 +99,7 @@ class WidgetPage(gtk.VBox):
 
         for nr in self._news.keys():
             if int(nr) not in self._news_handled:
-                self._newsstore.append((self._news[nr]["show"],
+                self._newsstore.append((False,
                                         self._news[nr]["title"],
                                         self._news[nr]["author"],
                                         self._news[nr]["date"],
@@ -117,7 +118,7 @@ class WidgetPage(gtk.VBox):
 
             for nr in self._current_entry["comments"].keys():
                 if int(nr) not in self._comments_handled:
-                    self._commentstore.append((self._current_entry["comments"][nr]["del"],
+                    self._commentstore.append((False,
                                                self._current_entry["comments"][nr]["date"],
                                                self._current_entry["comments"][nr]["author"],
                                                self._current_entry["comments"][nr]["content"],
@@ -125,6 +126,11 @@ class WidgetPage(gtk.VBox):
             del(self._comments_handled)
             self.builder.get_object("title").set_text(self._current_entry["title"])
             self.builder.get_object("content").get_buffer().set_text(self._current_entry["content"])
+        else:
+            self.builder.get_object("title").set_text("")
+            self.builder.get_object("content").get_buffer().set_text("")
+            self._commentstore.clear()
+
 
         del(self._itersToRemove)
 
@@ -142,9 +148,6 @@ class WidgetPage(gtk.VBox):
 
     def loadNewsEntryCallback(self,data):
         self._current_entry = data
-        for comment in self._current_entry["comments"].values():
-            comment["del"] = False
-
         self.render()
 
     @module_rpc(loadNewsEntryCallback)
@@ -190,6 +193,40 @@ class WidgetPage(gtk.VBox):
 
     def executeNew(self, title):
         self.create_news_entry(title)
+
+    def deleteEntriesCallback(self, data):
+        self.loadNewsEntry(self._current_entry["id"])
+        self.loadNews()
+
+    @module_rpc(deleteEntriesCallback)
+    def delete_entries(self, data):
+        pass
+    
+    def deleteCallback(self, data):
+        self._nws_to_delete = []
+        self._com_to_delete = []
+        def search_news(model,path,rowiter):
+            if model.get_value(rowiter,0):
+                self._nws_to_delete.append(model.get_value(rowiter,4))
+        
+        def search_comments(model,path,rowiter):
+            if model.get_value(rowiter,0):
+                self._com_to_delete.append(model.get_value(rowiter,4))
+
+        self._newsstore.foreach(search_news)
+        self._commentstore.foreach(search_comments)
+        data = {"nws" : self._nws_to_delete, "com" : self._com_to_delete}
+        del(self._nws_to_delete)
+        del(self._com_to_delete)
+        self.delete_entries(data)
+
+    def toggleDeleteNewsCallback(self, renderer, path, date=None):
+        rowiter = self._newsstore.get_iter(path)
+        self._newsstore.set_value(rowiter, 0, not self._newsstore.get_value(rowiter,0))
+
+    def toggleDeleteCommentCallback(self, renderer, path, data=None):
+        rowiter = self._commentstore.get_iter(path)
+        self._commentstore.set_value(rowiter, 0, not self._commentstore.get_value(rowiter,0))
 
     def getPar(self):
         return self.par

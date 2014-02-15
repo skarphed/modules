@@ -191,5 +191,15 @@ class Module(AbstractModule):
         db.query(self, stmnt, (new_id, current_user.get_id(), int(widget_id), unicode(title)), commit=True)
         return True
 
+    def delete_entries(self, widget_id, data):
+        db = self._core.get_db()
+        stmnt_nws = "DELETE FROM ${news} WHERE NWS_ID = ? AND MOD_INSTANCE_ID = ?;"
+        stmnt_com = "DELETE FROm ${comments} WHERE COM_ID = ? AND MOD_INSTANCE_ID = ?;"
+        for com_id in data["com"]:
+            db.query(self, stmnt_com, (com_id, widget_id), commit=True)
+        for nws_id in data["nws"]:
+            db.query(self, stmnt_nws, (nws_id, widget_id), commit=True)
+        return True
+
     def store_comment(self, author, comment):
         pass
