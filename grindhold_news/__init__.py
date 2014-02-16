@@ -57,7 +57,7 @@ class Module(AbstractModule):
                 #TODO: Escape incoming strings
                 stmnt = "INSERT INTO ${comments} (COM_ID, COM_AUTHOR, COM_TEXT, COM_NWS_ID, COM_DATE, MOD_INSTANCE_ID) VALUES (?,?,?,?,CURRENT_TIMESTAMP,?);"
                 db.query(self,stmnt, (new_comment_id, args["author"], args["text"], int(args["n"]),int(widget_id)),commit=True)
-            stmnt = "SELECT NWS_TITLE, NWS_TEXT, USR_NAME, NWS_DATE FROM ${news} INNER JOIN USERS ON USR_ID = NWS_USR_AUTHOR WHERE NWS_ID = ? AND MOD_INSTANCE_ID = ? ;"
+            stmnt = "SELECT NWS_TITLE, NWS_TEXT, USR_NAME, NWS_DATE FROM ${news} INNER JOIN USERS ON USR_ID = NWS_USR_AUTHOR WHERE NWS_ID = ? AND NWS_SHOW = 1 AND MOD_INSTANCE_ID = ? ;"
             cur = db.query(self, stmnt, (int(args["n"]), int(widget_id)))
             row = cur.fetchonemap()
             if row is None:
@@ -91,7 +91,7 @@ class Module(AbstractModule):
             skipstring = ""
             if args.has_key("p"):
                 skipstring = " SKIP %d "%int(args["p"])
-            stmnt = "SELECT FIRST 10 %s NWS_TITLE, NWS_ID, NWS_TEXT, USR_NAME, NWS_DATE FROM ${news} INNER JOIN USERS ON USR_ID = NWS_USR_AUTHOR WHERE MOD_INSTANCE_ID = ? ;"%skipstring
+            stmnt = "SELECT FIRST 10 %s NWS_TITLE, NWS_ID, NWS_TEXT, USR_NAME, NWS_DATE FROM ${news} INNER JOIN USERS ON USR_ID = NWS_USR_AUTHOR WHERE NWS_SHOW = 1 AND MOD_INSTANCE_ID = ? ;"%skipstring
             cur = db.query(self, stmnt, (widget_id,))
             for row in cur.fetchallmap():
                 text = self._shorten_newsentry(row["NWS_TEXT"][:200])

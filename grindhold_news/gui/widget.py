@@ -126,9 +126,16 @@ class WidgetPage(gtk.VBox):
             del(self._comments_handled)
             self.builder.get_object("title").set_text(self._current_entry["title"])
             self.builder.get_object("content").get_buffer().set_text(self._current_entry["content"])
+            self.builder.get_object("r_public").set_inconsistent(False)
+            self.builder.get_object("r_private").set_inconsistent(False)
+            self.builder.get_object("r_public").set_active(self._current_entry["show"])
+            self.builder.get_object("r_private").set_active(not self._current_entry["show"])
         else:
             self.builder.get_object("title").set_text("")
             self.builder.get_object("content").get_buffer().set_text("")
+            self.builder.get_object("r_public").set_inconsistent(True)
+            self.builder.get_object("r_private").set_inconsistent(True)
+
             self._commentstore.clear()
 
 
@@ -178,7 +185,7 @@ class WidgetPage(gtk.VBox):
         self._saving_entry["title"] = self.builder.get_object("title").get_text()
         textbuffer = self.builder.get_object("content").get_buffer()
         self._saving_entry["content"] = textbuffer.get_text(textbuffer.get_start_iter(),textbuffer.get_end_iter())
-
+        self._saving_entry["show"] = self.builder.get_object("r_public").get_active()
         self.save_news_entry(self._saving_entry)
 
     def createNewEntryCallback(self, data):
