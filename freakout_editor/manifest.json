@@ -1,0 +1,14 @@
+{
+	"name":"freakout_editor",
+	"hrname":"HTML Editor",
+	"version_major":0,
+	"version_minor":0,
+	"permissions":["edit"],
+	"js_mandatory":0,
+	"tables":[{
+		"name":"content",
+		"columns":[
+			{"name":"CON_CONTENT","type":"Blob sub_type 1"}
+		]}
+	]
+}
