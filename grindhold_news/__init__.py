@@ -46,6 +46,10 @@ class Module(AbstractModule):
     BEGIN IMPLEMENTING YOUR MODULE HERE
     """
 
+    def _sanitize_input(self, input):
+        input = input.replace("<", "&lt;")
+        return input.replace(">", "&gt;")
+
     def render_pure_html(self,widget_id,args={}):
         db = self._core.get_db()
         ret = StringIO()
@@ -54,9 +58,10 @@ class Module(AbstractModule):
         if args.has_key("n"): #if specific newsentry is wanted:
             if "author" in args.keys() and "text" in args.keys():
                 new_comment_id = db.get_seq_next("${grindhold_news.comments}")
-                #TODO: Escape incoming strings
+                author = self._sanitize_input(args["author"])
+                text = self._sanitize_input(args["text"])
                 stmnt = "INSERT INTO ${comments} (COM_ID, COM_AUTHOR, COM_TEXT, COM_NWS_ID, COM_DATE, MOD_INSTANCE_ID) VALUES (?,?,?,?,CURRENT_TIMESTAMP,?);"
-                db.query(self,stmnt, (new_comment_id, args["author"], args["text"], int(args["n"]),int(widget_id)),commit=True)
+                db.query(self,stmnt, (new_comment_id, author, text, int(args["n"]),int(widget_id)),commit=True)
             stmnt = "SELECT NWS_TITLE, NWS_TEXT, USR_NAME, NWS_DATE FROM ${news} INNER JOIN USERS ON USR_ID = NWS_USR_AUTHOR WHERE NWS_ID = ? AND NWS_SHOW = 1 AND MOD_INSTANCE_ID = ? ;"
             cur = db.query(self, stmnt, (int(args["n"]), int(widget_id)))
             row = cur.fetchonemap()
