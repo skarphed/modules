@@ -63,7 +63,7 @@ class WidgetPage(gtk.VBox):
         self._newsstore = self.builder.get_object("newsstore")
         self._commentstore = self.builder.get_object("commentstore")
 
-        self.widget.pack_start(ViewGenerationControl(self, widget))
+        self.widget.pack_start(ViewGenerationControl(self, widget),False)
 
         self.add(self.widget)
         self.loadNews()

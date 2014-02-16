@@ -68,7 +68,7 @@ class Module(AbstractModule):
             if row is None:
                 return "<h2> Nothing... </h2><p> Seriously, there is nothing like that here</p><p> We're sorry</p>"
             ret.write("<h3> %s </h3>"%row["NWS_TITLE"])
-            ret.write('<div class="newsauthor">%s</div><div class="newsdate">%s</div>'%(row["USR_NAME"],str(row["NWS_DATE"])))
+            ret.write('<div class="newsauthor">%s</div><div class="newsdate">%s</div>'%(row["USR_NAME"],str(row["NWS_DATE"]).split(".")[0]))
             ret.write('<div class="newsseparator" style="height:1px; border-bottom:1px dotted silver;"></div>')
             ret.write('<p>%s</p>'%row["NWS_TEXT"])
 
@@ -76,7 +76,7 @@ class Module(AbstractModule):
             cur = db.query(self, stmnt, (int(args["n"]),int(widget_id)))
 
             for row in cur.fetchallmap():
-                ret.write('<div class="commentauthor">Comment by %s</div><div class="commentdate">%s</div>'%(row["COM_AUTHOR"],str(row["COM_DATE"])))
+                ret.write('<div class="commentauthor">Comment by %s</div><div class="commentdate">%s</div>'%(row["COM_AUTHOR"],str(row["COM_DATE"]).split(".")[0]))
                 ret.write('<blockquote>%s</blockquote>'%row["COM_TEXT"])
 
             target_view = {'p':widget_id, 'c':{widget_id:{"n":args["n"]}}}
@@ -105,7 +105,7 @@ class Module(AbstractModule):
                 read_on_link = view.generate_link_from_dict(target_view)
 
                 ret.write("<h3> %s </h3>"%row["NWS_TITLE"])
-                ret.write('<div class="newsauthor">%s</div><div class="newsdate">%s</div>'%(row["USR_NAME"],str(row["NWS_DATE"])))
+                ret.write('<div class="newsauthor">%s</div><div class="newsdate">%s</div>'%(row["USR_NAME"],str(row["NWS_DATE"]).split(".")[0]))
                 ret.write('<div class="newsseparator" style="height:1px; border-bottom:1px dotted silver;"></div>')
                 ret.write('<p>%s<a href="%s">[ Read on ... ]</a></p><p>&nbsp;</p>'%(text,read_on_link))
             return ret.getvalue()
