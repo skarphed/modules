@@ -124,6 +124,10 @@ class WidgetPage(gtk.VBox):
                                                self._current_entry["comments"][nr]["content"],
                                                int(nr)))
             del(self._comments_handled)
+
+            self.builder.get_object("title").set_sensitive(True)
+            self.builder.get_object("content").set_sensitive(True)
+            self.builder.get_object("save").set_sensitive(True)
             self.builder.get_object("title").set_text(self._current_entry["title"])
             self.builder.get_object("content").get_buffer().set_text(self._current_entry["content"])
             self.builder.get_object("r_public").set_inconsistent(False)
@@ -133,6 +137,9 @@ class WidgetPage(gtk.VBox):
         else:
             self.builder.get_object("title").set_text("")
             self.builder.get_object("content").get_buffer().set_text("")
+            self.builder.get_object("title").set_sensitive(False)
+            self.builder.get_object("content").set_sensitive(False)
+            self.builder.get_object("save").set_sensitive(False)
             self.builder.get_object("r_public").set_inconsistent(True)
             self.builder.get_object("r_private").set_inconsistent(True)
 
