@@ -1,5 +1,5 @@
 import os
-from module import AbstractModule
+from skarphedcore.module import AbstractModule
 
 class ModuleException(Exception):
     ERRORS = {

@@ -27,7 +27,7 @@ from StringIO import StringIO
 from hashlib import sha512
 from random import randrange
 
-from module import AbstractModule
+from skarphedcore.module import AbstractModule
 
 class ModuleException(Exception): 
     ERRORS = {
