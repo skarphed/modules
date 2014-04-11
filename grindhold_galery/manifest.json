@@ -1,0 +1,29 @@
+{
+    "name":"grindhold_galery",
+    "hrname":"Galery",
+    "version_major":0,
+    "version_minor":0,
+    "permissions":["create","delete","edit","deletecomments"],
+    "js_mandatory":0,
+    "tables":[
+        {"name":"galeries",
+         "columns":[
+            {"name": "GAL_ID",      "type": "INT"},
+            {"name": "GAL_NAME",    "type": "VARCHAR(255)"},
+            {"name": "GAL_DESC",    "type": "VARCHAR(2000)"},
+            {"name": "GAL_USR_AUTHOR", "type": "INT"},
+            {"name": "GAL_DATE",    "type": "TIMESTAMP"},
+            {"name": "GAL_SHOW",    "type": "INT"}
+         ]},
+        {"name":"pictures",
+         "columns":[
+            {"name": "PIC_ID",      "type": "INT"},
+            {"name": "PIC_GAL_ID",  "type": "INT"},
+            {"name": "PIC_BIN_ID",  "type": "INT"},
+            {"name": "PIC_NAME",    "type": "VARCHAR(255)"},
+            {"name": "PIC_DESC",    "type": "VARCHAR(2000)"}
+         ]
+        }
+    ]
+}
+            
