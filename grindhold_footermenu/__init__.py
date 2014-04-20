@@ -51,6 +51,8 @@ class Module(AbstractModule):
         menu_id = content['menuId']
         action_manager = self._core.get_action_manager()
         menu = action_manager.get_menu_by_id(menu_id)
+        if menu is None:
+            return "[No menu specified]"
         menu_items = menu.get_menu_items()
 
         sub_menu_items = []
