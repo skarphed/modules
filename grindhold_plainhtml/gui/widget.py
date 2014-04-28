@@ -28,7 +28,7 @@ import gtk
 
 import os
 
-from data.skarphed.Skarphed import module_rpc
+from skarphedadmin.data.skarphed.Skarphed import module_rpc
 
 class WidgetPage(gtk.VBox):
     def __init__(self, parent, widget):

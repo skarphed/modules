@@ -28,10 +28,10 @@ import gtk
 
 import os
 
-from data.skarphed.Skarphed import module_rpc
+from skarphedadmin.data.skarphed.Skarphed import module_rpc
 
-from gui.skarphed.ViewGenerationControl import ViewGenerationControl
-from gui.InputBox import InputBox
+from skarphedadmin.gui.skarphed.ViewGenerationControl import ViewGenerationControl
+from skarphedadmin.gui.InputBox import InputBox
 
 class WidgetPage(gtk.VBox):
     def __init__(self, parent, widget):

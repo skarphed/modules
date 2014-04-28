@@ -28,10 +28,11 @@ import gtk
 
 import os
 
-from gui.ObjectCombo import ObjectCombo
-from data.Generic import GenericObjectStoreException
+from skarphedadmin.gui.ObjectCombo import ObjectCombo
+from skarphedadmin.data.Generic import GenericObjectStoreException
 
-from data.skarphed.Skarphed import module_rpc
+from skarphedadmin.data.skarphed.Skarphed import module_rpc
+from skarphedadmin.data.skarphed.Menu import Menu
 
 class WidgetPage(gtk.VBox):
     HORIZONTALLY = 0
@@ -58,7 +59,7 @@ class WidgetPage(gtk.VBox):
         self.structure_table = self.builder.get_object("structure_table")
         self.content = self.builder.get_object("widget")
         self.menu_selector = ObjectCombo(self, 
-                                    "Menu",
+                                    Menu,
                                     selectFirst=True,
                                     virtualRootObject=widget.getModule().getModules().getSkarphed().getSites())
         self.structure_table.attach(self.menu_selector,1,2,1,2, gtk.FILL|gtk.SHRINK, gtk.FILL|gtk.SHRINK,0,0)
